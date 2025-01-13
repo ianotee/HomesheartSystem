@@ -3,6 +3,6 @@ from .import views
 
 
 urlpatterns =[
-    path('Accounts/',views.Accounts, name='Accounts'),
+    path('',views.Accounts, name='Accounts'),
    
 ]

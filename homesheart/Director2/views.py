@@ -1,5 +1,5 @@
 from django.shortcuts import render
 
-def director2(request):
+def Director2(request):
 
-    return render(request, 'director2.html')
+    return render(request, 'Director2/home.html')

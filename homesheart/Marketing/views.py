@@ -1,8 +1,5 @@
 from django.shortcuts import render
 
 
-def marketing(request):
-  
-    
-
-    return render(request, 'marketing.html')
+def Marketing(request):
+    return render(request, 'Marketing/home.html')

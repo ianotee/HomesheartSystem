@@ -1,10 +1,5 @@
 from django.shortcuts import render
 
-def director(request):
-    page ='Directors Dashboard'
+def Director(request):
 
-    context ={
-        'page': page
-    }
-
-    return render(request,'director.html',context)
+    return render(request, 'Director/home.html')

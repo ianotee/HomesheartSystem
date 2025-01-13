@@ -1,7 +1,5 @@
 from django.shortcuts import render
 
 
-def manager(request):
-
-
-    return render(request, 'manager.html')
+def Manager(request):
+    return render(request, 'Manager/home.html')

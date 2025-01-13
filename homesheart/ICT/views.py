@@ -1,5 +1,5 @@
 from django.shortcuts import render
 
-def Ict(request):
+def ICT(request):
     
-    return render(request, 'Ict.html')
+    return render(request, 'ICT/home.html')

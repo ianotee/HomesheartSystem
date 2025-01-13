@@ -1,6 +1,4 @@
 from django.shortcuts import render
 
-def reception(request):
-
-
-    return render(request, 'reception.html')
+def Reception(request):
+    return render(request, 'Reception/home.html')
