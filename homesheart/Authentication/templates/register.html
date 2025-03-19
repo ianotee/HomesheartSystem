@@ -116,7 +116,6 @@
   Your browser does not support the video tag.
 </video>
 
-
 {% block content %}
 <section class="ftco-section">
     <div class="container">
@@ -133,7 +132,7 @@
                     </div>
                 </div>
                 <!-- Registration form -->
-                <form method="POST" class="signin-form">
+                <form id="registrationForm" class="signin-form" method="POST" action="{% url 'register' %}">
                     {% csrf_token %}
                     <div class="form-group mb-3">
                         <label class="label" for="email">Email</label>
@@ -157,18 +156,67 @@
                 </form>
                 <p class="text-center" style="color: blue;">Have an Account? <a href="{% url 'login' %}">Sign In</a></p>
                 <!-- Display error messages -->
-                {% if messages %}
-                <div class="alert alert-danger mt-3">
-                    {% for message in messages %}
-                    <p>{{ message }}</p>
-                    {% endfor %}
-                </div>
-                {% endif %}
+                <div id="errorMessages" class="alert alert-danger mt-3" style="display:none;"></div>
+                <div id="successMessage" class="alert alert-success mt-3" style="display:none;"></div>
             </div>
         </div>
     </div>
 </section>
+
+<script>
+  document.getElementById('registrationForm').addEventListener('submit', function(e) {
+    e.preventDefault(); // Prevent default form submission
+
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirm-password').value;
+    const contact = document.getElementById('contact').value;
+
+    // Basic password matching check
+    if (password !== confirmPassword) {
+        document.getElementById('errorMessages').style.display = 'block';
+        document.getElementById('errorMessages').innerHTML = '<p>Passwords do not match.</p>';
+        return;
+    }
+
+    // Prepare data for POST request
+    const data = new FormData();
+    data.append('email', email);
+    data.append('password', password);
+    data.append('confirm-password', confirmPassword);
+    data.append('contact', contact);
+
+    // Send POST request using fetch
+    fetch("{% url 'register' %}", {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        },
+        body: data
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.message) {
+            document.getElementById('successMessage').style.display = 'block';
+            document.getElementById('successMessage').innerHTML = '<p>' + data.message + '</p>';
+            document.getElementById('registrationForm').reset();
+        } else if (data.errors) {
+            document.getElementById('errorMessages').style.display = 'block';
+            document.getElementById('errorMessages').innerHTML = '<p>' + Object.values(data.errors).join('<br>') + '</p>';
+        }
+    })
+    .catch(error => {
+        document.getElementById('errorMessages').style.display = 'block';
+        document.getElementById('errorMessages').innerHTML = '<p>An error occurred. Please try again later.</p>';
+    });
+});
+
+</script>
 {% endblock %}
+
+
+
+
 
     <!-- Static JS -->
     <script src="{% static 'js/jquery.min.js' %}"></script>

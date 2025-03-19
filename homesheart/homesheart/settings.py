@@ -19,7 +19,6 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -39,14 +38,10 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
-    'djoser',
-    'django_otp',
-    'django_otp.plugins.otp_static',
-    'django_otp.plugins.otp_totp',
-    'django_otp.plugins.otp_email',
-   
-
+    'django_otp',  # Add this line for django_otp
+    'django_otp.plugins.otp_email',  # Add this line for the OTP email plugin
 ]
+
 
 # settings.py
 LOGIN_URL = '/api/login/' # The URL where users will be redirected if they're not logged in
@@ -73,7 +68,7 @@ SIMPLE_JWT = {
 }
 
 
-
+'''
 DJOSER = {
     'USER_CREATE_PASSWORD_RETYPE': True,
     'LOGIN_FIELD': 'email',
@@ -82,9 +77,11 @@ DJOSER = {
         'user': 'Authentication.serializers.UserSerializer',
     },
 }
+'''
 
 
-
+CSRF_COOKIE_HTTPONLY = True
+CSRF_COOKIE_SAMESITE = 'Strict'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

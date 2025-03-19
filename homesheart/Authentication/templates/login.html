@@ -117,39 +117,74 @@
 </video>
 
 
+<!-- login.html -->
 <div class="container">
   <h2 class="heading-section" style="color: white; font-weight: 1000;">Homes Heart Properties Ltd</h2>
   <div class="login-wrap">
     <h3 class="mb-4">Sign In</h3>
     <!-- Use the action attribute to post to the login view -->
-    <form method="POST" class="signin-form">
+    <form id="login-form" class="signin-form">
       {% csrf_token %}
       <div class="form-group mb-3">
         <label class="label" for="email">Email</label>
-        <!-- Ensure input name matches the expected 'email' in the view -->
-        <input type="email" name="email" class="form-control" placeholder="Email" required>
+        <input type="email" name="email" id="email" class="form-control" placeholder="Email" required>
       </div>
       <div class="form-group mb-3">
         <label class="label" for="password">Password</label>
-        <!-- Ensure input name matches the expected 'password' in the view -->
-        <input type="password" name="password" class="form-control" placeholder="Password" required>
+        <input type="password" name="password" id="password" class="form-control" placeholder="Password" required>
       </div>
       <div class="form-group">
         <button type="submit" class="btn btn-primary">Sign In</button>
       </div>
     </form>
     <p class="text-center">Not a member? <a href="{% url 'register' %}">Sign Up</a></p>
+    
     <!-- Display error messages if any -->
-    {% if messages %}
-      <div class="alert alert-danger mt-3">
-        {% for message in messages %}
-          <p>{{ message }}</p>
-        {% endfor %}
-      </div>
-    {% endif %}
+    <div id="error-messages"></div>
   </div>
 </div>
 
+<script>
+  // Handle form submission with JavaScript to manage the response and redirection
+  document.getElementById('login-form').addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevent the default form submission
+
+    // Collect form data
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+
+    // Send POST request to the login endpoint
+    fetch("{% url 'login' %}", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': '{{ csrf_token }}',
+      },
+      body: JSON.stringify({ email: email, password: password })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.redirect) {
+        // Redirect the user based on the response from the backend
+        window.location.href = data.redirect;
+      } else if (data.errors) {
+        // Display errors if any
+        let errorMessages = "<div class='alert alert-danger mt-3'>";
+        for (const error of data.errors) {
+          errorMessages += `<p>${error}</p>`;
+        }
+        errorMessages += "</div>";
+        document.getElementById("error-messages").innerHTML = errorMessages;
+      } else {
+        document.getElementById("error-messages").innerHTML = "<div class='alert alert-danger mt-3'><p>Something went wrong. Please try again later.</p></div>";
+      }
+    })
+    .catch(error => {
+      console.error("Error:", error);
+      document.getElementById("error-messages").innerHTML = "<div class='alert alert-danger mt-3'><p>Something went wrong. Please try again later.</p></div>";
+    });
+  });
+</script>
 
     <!-- Scripts -->
     <script src="{% static 'js/jquery.min.js' %}"></script>

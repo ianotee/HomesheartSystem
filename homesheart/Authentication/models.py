@@ -4,6 +4,9 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from django.contrib.auth.models import AbstractUser
+from django.db import models
+
 class User(AbstractUser):
     email = models.EmailField(unique=True)
     contact = models.CharField(max_length=15, blank=True, null=True)
@@ -24,6 +27,7 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.email
+
 
 class LoginBackgroundVideo(models.Model):
     video = models.FileField(upload_to='videos/')
